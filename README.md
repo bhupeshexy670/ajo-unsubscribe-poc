@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AJO Unsubscribe POC
 
-## Getting Started
+This project is a small Next.js demo for testing Adobe Journey Optimizer unsubscribe behavior. It includes a polished front end and a validated API endpoint that accepts unsubscribe requests and returns structured JSON responses.
 
-First, run the development server:
+## Features
+
+- Clean unsubscribe form UI
+- Validation for email and unsubscribe reason
+- JSON API at `/api/unsubscribe`
+- Small regression tests for valid and invalid requests
+- Ready for local development and demo use
+
+## Run locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## API contract
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### POST /api/unsubscribe
 
-## Learn More
+Request body example:
 
-To learn more about Next.js, take a look at the following resources:
+```json
+{
+  "email": "person@example.com",
+  "reason": "Too many emails",
+  "source": "newsletter"
+}
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Successful response:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```json
+{
+  "success": true,
+  "message": "Unsubscribe request received successfully.",
+  "data": {
+    "email": "person@example.com",
+    "reason": "Too many emails",
+    "source": "newsletter",
+    "timestamp": "2026-09-02T12:00:00.000Z"
+  }
+}
+```
 
-## Deploy on Vercel
+## Testing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm test
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Build
+
+```bash
+npm run build
+```
