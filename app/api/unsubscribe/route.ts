@@ -8,15 +8,18 @@ export async function POST(request: Request) {
   console.log("URL:", request.url);
 
 
+  const clonedRequest = request.clone();
+
+
   try {
 
-    const body = await request.text();
+    const body = await clonedRequest.text();
 
     console.log("BODY:", body);
 
   } catch (e) {
 
-    console.log("NO BODY");
+    console.log("BODY READ FAILED", e);
 
   }
 
@@ -52,9 +55,7 @@ export async function GET(request: Request) {
 
   return Response.json({
 
-    success: true,
-
-    endpoint: "/api/unsubscribe",
+    success: true
 
   });
 
