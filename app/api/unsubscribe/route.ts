@@ -1,63 +1,55 @@
-import { handleUnsubscribeRequest } from "@/lib/unsubscribe.mjs";
+import { NextRequest }
+from "next/server";
 
+import {
+  decryptPayload,
+} from "@/lib/adobe";
 
-export async function POST(request: Request) {
-
-  console.log("===== POST UNSUBSCRIBE HIT =====");
-
-  console.log("URL:", request.url);
-
-
-  const clonedRequest = request.clone();
-
-
+export async function GET(
+  request: NextRequest
+) {
   try {
+    const { searchParams } =
+      new URL(request.url);
 
-    const body = await clonedRequest.text();
+    const params =
+      searchParams.get(
+        "params"
+      ) || "demo";
 
-    console.log("BODY:", body);
+    const pid =
+      searchParams.get(
+        "pid"
+      ) || "demo";
 
-  } catch (e) {
+    const profile =
+      await decryptPayload(
+        params,
+        pid
+      );
 
-    console.log("BODY READ FAILED", e);
+    console.log(
+      "PROFILE"
+    );
 
+    console.log(profile);
+
+    return Response.json({
+      success: true,
+      profile,
+    });
+  } catch (error) {
+    return Response.json(
+      {
+        success: false,
+        error:
+          error instanceof Error
+            ? error.message
+            : "Unknown Error",
+      },
+      {
+        status: 500,
+      }
+    );
   }
-
-
-  return handleUnsubscribeRequest(request);
-
 }
-
-
-export async function GET(request: Request) {
-
-  const url = new URL(request.url);
-
-
-  console.log("===== GET UNSUBSCRIBE HIT =====");
-
-  console.log("FULL URL:", request.url);
-
-
-  console.log("PID:", url.searchParams.get("pid"));
-
-  console.log("PARAMS:", url.searchParams.get("params"));
-
-
-  console.log(
-
-    "ALL PARAMS:",
-
-    Object.fromEntries(url.searchParams.entries())
-
-  );
-
-
-  return Response.json({
-
-    success: true
-
-  });
-
-}
- 
