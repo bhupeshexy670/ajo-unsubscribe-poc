@@ -33,11 +33,13 @@ export async function getAdobeToken() {
 
 export async function decryptPayload(params: string, pid: string) {
   const token = await getAdobeToken();
+  const region = process.env.ADOBE_REGION || "NLD2";
 
   const url =
     `${process.env.ADOBE_DECRYPT_URL}` +
     `?params=${encodeURIComponent(params)}` +
-    `&pid=${encodeURIComponent(pid)}`;
+    `&pid=${encodeURIComponent(pid)}` +
+    `&region=${encodeURIComponent(region)}`;
 
   const response = await fetch(url, {
     method: "GET",
@@ -46,6 +48,7 @@ export async function decryptPayload(params: string, pid: string) {
       "x-api-key": process.env.ADOBE_CLIENT_ID!,
       "x-gw-ims-org-id": process.env.ADOBE_IMS_ORG_ID!,
       "x-sandbox-name": process.env.ADOBE_SANDBOX_NAME!,
+      "x-adobe-region": region,
     },
   });
 
